@@ -1,0 +1,17 @@
+.root {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.RemoveTimeButton {
+    float: right;
+    text-align: center;
+}
+
+.time-display {
+    display: flex;
+    align-items: center;
+    justify-items: start;
+    width: 80%;
+}
