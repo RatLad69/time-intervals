@@ -6,7 +6,9 @@
 
 .time-container {}
 
-.alarm-container {}
+.alarm-container {
+    width: 100%;
+}
 
 .intervals {
     display: flex;
@@ -18,4 +20,10 @@
     padding-top: 20px;
     padding-left: 0px;
     display: inline-block;
+}
+
+.alarm-controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px 50px;
 }
