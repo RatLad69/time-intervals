@@ -5,4 +5,7 @@ export default createBoard({
     name: 'NewInterval',
     Board: () => <NewInterval />,
     isSnippet: true,
+    environmentProps: {
+        canvasWidth: 332
+    }
 });
