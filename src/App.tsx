@@ -5,7 +5,6 @@ import { NewInterval } from './components/new-interval/new-interval';
 
 
 function App() {
-    //let alarmIntervals: React.ReactElement[] = [];
     const [alarmIntervals, setAlarmIntervals] = useState<React.ReactElement[]>([]);
     const [alarmsAdded, setAlarmsAdded] = useState(0);
 
@@ -15,13 +14,30 @@ function App() {
     }
 
     const addAlarm = (time: Array<number>) => {
-        //alarmIntervals.push(<AlarmTime duration={time}/>);
         let newAlarms: React.ReactElement[] = alarmIntervals.slice();
         newAlarms.push(<AlarmTime duration={time} alarmID={alarmsAdded} removeAlarm={removeAlarm} />);
         setAlarmIntervals(newAlarms);
         console.log("added new alarm");
         console.log("alarms: " + alarmIntervals);
         setAlarmsAdded(alarmsAdded + 1);
+    }
+
+    const countDown = (hms: Array<number>) => {
+        if (hms[2] > 0) {
+            hms[2]--;
+        } else {
+            if (hms[1] > 0) {
+                hms[1]--;
+                hms[2] = 59;
+            } else {
+                if (hms[0] > 0) {
+                    hms[0]--;
+                    hms[1] = 59;
+                    hms[2] = 59;
+                }
+            }
+        }
+        return hms;
     }
 
     return (
