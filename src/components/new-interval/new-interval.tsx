@@ -4,15 +4,17 @@ import { useState } from 'react';
 
 export interface NewIntervalProps {
     className?: string;
+    addNewAlarm: (...args: any[]) => any;
 }
+
+let duration = "0:00";
+let HMSduration = [0, 0, 0, 0];
 
 /**
  * This component was created using Codux's Default new component template.
  * To create custom component templates, see https://help.codux.com/kb/en/article/kb16522
  */
-export const NewInterval = ({ className }: NewIntervalProps) => {
-    let duration = "0:00";
-    let HMSduration = [0, 0, 0, 0];
+export const NewInterval = ({ className, addNewAlarm }: NewIntervalProps) => {
 
     const inToHMS = (uInput: string) => {
         const hmsList = uInput.split(":");
@@ -46,7 +48,9 @@ export const NewInterval = ({ className }: NewIntervalProps) => {
     }
 
     const handleClick = () => {
-        alert(duration);
+        console.log("click");
+        addNewAlarm(HMSduration);
+
     }
 
     return <div className={classNames(styles.root, className)}>

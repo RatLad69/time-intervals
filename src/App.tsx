@@ -5,16 +5,26 @@ import { NewInterval } from './components/new-interval/new-interval';
 
 
 function App() {
+    //let alarmIntervals: React.ReactElement[] = [];
+    const [alarmIntervals, setAlarmIntervals] = useState<React.ReactElement[]>([]);
+
+    const addAlarm = (time: Array<number>) => {
+        //alarmIntervals.push(<AlarmTime duration={time}/>);
+        let newAlarms: React.ReactElement[] = alarmIntervals.slice();
+        newAlarms.push(<AlarmTime duration={time}/>);
+        setAlarmIntervals(newAlarms);
+        console.log("added new alarm");
+        console.log("alarms: " + alarmIntervals);
+    }
 
     return (
         <div className={styles.App}>
             <div className={styles['time-container']}>
                 <div className={styles.intervals}>
-                    <AlarmTime />
-                    <AlarmTime />
+                    {alarmIntervals}
                 </div>
                 <div className={styles['new-interval']}>
-                    <NewInterval />
+                    <NewInterval addNewAlarm={addAlarm} />
                 </div>
             </div>
             <div className={styles['alarm-container']} />
