@@ -6,7 +6,7 @@ export default createBoard({
     Board: () => <AlarmTime />,
     isSnippet: true,
     environmentProps: {
-        canvasWidth: 316,
+        canvasWidth: 232,
         canvasHeight: 159
     }
 });
