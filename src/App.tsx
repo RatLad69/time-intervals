@@ -7,6 +7,9 @@ import { NewInterval } from './components/new-interval/new-interval';
 function App() {
     const [alarmIntervals, setAlarmIntervals] = useState<React.ReactElement[]>([]);
     const [alarmsAdded, setAlarmsAdded] = useState(0);
+    const [counting, setCountingState] = useState(false);
+    const [pauseText, setPauseText] = useState("Start");
+    const [currentCount, setCurrentCount] = useState("0:00");
 
     const removeAlarm = (id: number) => {
         setAlarmIntervals((old) =>
@@ -22,22 +25,18 @@ function App() {
         setAlarmsAdded(alarmsAdded + 1);
     }
 
-    const countDown = (hms: Array<number>) => {
-        if (hms[2] > 0) {
-            hms[2]--;
+    const handlePause = () => {
+        if (counting) {
+            setPauseText("Resume");
         } else {
-            if (hms[1] > 0) {
-                hms[1]--;
-                hms[2] = 59;
-            } else {
-                if (hms[0] > 0) {
-                    hms[0]--;
-                    hms[1] = 59;
-                    hms[2] = 59;
-                }
-            }
+            setPauseText("Pause");
         }
-        return hms;
+        setCountingState(!counting);
+    }
+
+    const handleReset = () => {
+        // This will reset the countdown to the initial state for the current interval
+        console.log("Reset");
     }
 
     return (
@@ -51,10 +50,10 @@ function App() {
                 </div>
             </div>
             <div className={styles['alarm-container']}>
-                <h1>5:00</h1>
+                <h1>{currentCount}</h1>
                 <div className={styles['alarm-controls']}>
-                    <button>Pause</button>
-                    <button>Reset</button>
+                    <button onClick={() => handlePause()}>{pauseText}</button>
+                    <button onClick={() => handleReset()}>Reset</button>
                 </div>
             </div>
         </div>
