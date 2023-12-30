@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import styles from './alarm-time.module.scss';
+import { timeToString } from '../../timeCalcs';
 
 export interface AlarmTimeProps {
     className?: string;
@@ -13,19 +14,6 @@ export interface AlarmTimeProps {
  * To create custom component templates, see https://help.codux.com/kb/en/article/kb16522
  */
 export const AlarmTime = ({ className, duration, alarmID, removeAlarm }: AlarmTimeProps) => {
-    const timeToString = (time: Array<number>) => {
-        let timeString = "";
-        for (let i = 0; i < time.length - 1; i++) {
-            if (String(time[i]).length === 1) {
-                timeString += "0";
-            }
-            timeString += time[i];
-            if (i != time.length - 2) {
-                timeString += ":";
-            }
-        }
-        return timeString;
-    }
 
     const handleXClick = () => {
         removeAlarm(alarmID);
