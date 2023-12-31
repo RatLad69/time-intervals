@@ -88,6 +88,7 @@ function App() {
             const timeLeftHMS = msToHMS(timeLeft);
             const timeLeftString = timeToString(timeLeftHMS);
             setCurrentCount(timeLeftString);
+            // End of interval behavior handled by useEffect with dependency currentCount
         } 
     }
 
