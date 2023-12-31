@@ -14,12 +14,16 @@ function App() {
     const [counting, setCountingState] = useState(false);
     const [pauseText, setPauseText] = useState("Start");
     const [currentCount, setCurrentCount] = useState("0:00");
+    const [changedByUser, setChangedByUser] = useState(false);
     //const [timeStarted, setTimeStarted] = useState(0);
     //const [intervalEnd, setIntervalEnd] = useState(0);
 
-    const removeAlarm = (id: number) => {
+    const removeAlarm = (id: number, userClick: boolean) => {
         setAlarmIntervals((old) =>
             old.filter((alarmInterval) => alarmInterval.props.alarmID !== id));
+        if (userClick) {
+            setChangedByUser(true);
+        }
     }
 
     const addAlarm = (time: Array<number>) => {
@@ -29,6 +33,7 @@ function App() {
         console.log("added new alarm");
         console.log("alarms: " + alarmIntervals);
         setAlarmsAdded(alarmsAdded + 1);
+        setChangedByUser(true);
     }
 
     const handlePause = () => {
@@ -52,30 +57,36 @@ function App() {
     }
 
     useEffect(() => {
-        if (!counting) {
+        if (changedByUser) {
+            console.log("Changed by user");
             if (alarmIntervals.length === 0) {
                 setCurrentCount("0:00");
-            } else if (alarmIntervals.length === 1) { //Change to just else?
+            } else {
                 setCurrentCount(timeToString(alarmIntervals[0].props.duration));
             }
         } else {
+            console.log("Changed by countdown");
             if (alarmIntervals.length === 0) {
                 setPauseText("Start");
                 setCountingState(false);
             } else {
                 setCurrentCount(timeToString(alarmIntervals[0].props.duration));
-                console.log(alarmIntervals[0].props.duration);
-                console.log("Current count set to: " + currentCount);
                 timeStarted = Date.now();
                 intervalEnd = timeStarted + alarmIntervals[0].props.duration[3] * 1000;
             }
         }
+        setChangedByUser(false);
     }, [alarmIntervals]);
+
+    useEffect(() => {
+        //For debugging
+        console.log("Changed by user: " + changedByUser);
+    }, [changedByUser])
 
     useEffect(() => {
         if (inToHMS(currentCount)[3] < 1 && counting) {
             // Detects if the current count has reached 0. If it has, deletes that alarm.
-            removeAlarm(alarmIntervals[0].props.alarmID);
+            removeAlarm(alarmIntervals[0].props.alarmID, false);
         }
     }, [currentCount])
 

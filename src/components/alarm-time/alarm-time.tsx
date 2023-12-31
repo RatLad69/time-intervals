@@ -16,7 +16,7 @@ export interface AlarmTimeProps {
 export const AlarmTime = ({ className, duration, alarmID, removeAlarm }: AlarmTimeProps) => {
 
     const handleXClick = () => {
-        removeAlarm(alarmID);
+        removeAlarm(alarmID, true);
     }
 
     return <div className={classNames(styles.root, className)}>
