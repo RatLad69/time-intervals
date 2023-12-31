@@ -6,7 +6,7 @@ import { inToHMS, msToHMS, timeToString } from './timeCalcs';
 
 let timeStarted = 0;
 let intervalEnd = 0;
-let leftInInterval = 0;
+//let leftInInterval = 0;
 
 function App() {
     const [alarmIntervals, setAlarmIntervals] = useState<React.ReactElement[]>([]);
@@ -39,7 +39,7 @@ function App() {
             } else {
                 setPauseText("Pause");
                 timeStarted = Date.now();
-                intervalEnd = timeStarted + inToHMS(currentCount)[3] * 1000; //TODO: Change to duration of first alarm
+                intervalEnd = timeStarted + inToHMS(currentCount)[3] * 1000;
                 console.log(intervalEnd - timeStarted);
             }
             setCountingState(!counting);
@@ -52,21 +52,42 @@ function App() {
     }
 
     useEffect(() => {
-        if (alarmIntervals.length === 0) {
-            setCurrentCount("0:00");
-        } else if (alarmIntervals.length === 1) {
-            setCurrentCount(timeToString(alarmIntervals[0].props.duration));
+        if (!counting) {
+            if (alarmIntervals.length === 0) {
+                setCurrentCount("0:00");
+            } else if (alarmIntervals.length === 1) { //Change to just else?
+                setCurrentCount(timeToString(alarmIntervals[0].props.duration));
+            }
+        } else {
+            if (alarmIntervals.length === 0) {
+                setPauseText("Start");
+                setCountingState(false);
+            } else {
+                setCurrentCount(timeToString(alarmIntervals[0].props.duration));
+                console.log(alarmIntervals[0].props.duration);
+                console.log("Current count set to: " + currentCount);
+                timeStarted = Date.now();
+                intervalEnd = timeStarted + alarmIntervals[0].props.duration[3] * 1000;
+            }
         }
     }, [alarmIntervals]);
 
+    useEffect(() => {
+        if (inToHMS(currentCount)[3] < 1 && counting) {
+            // Detects if the current count has reached 0. If it has, deletes that alarm.
+            removeAlarm(alarmIntervals[0].props.alarmID);
+        }
+    }, [currentCount])
+
     const timeUpdate = (isCounting: boolean) => {
+        // Called at specified interval from setInterval
+        // Adjusts the count based on time when called
         if (isCounting) {
             // Start and end time should already be set by handlePause
             const timeLeft = intervalEnd - Date.now();
             const timeLeftHMS = msToHMS(timeLeft);
             const timeLeftString = timeToString(timeLeftHMS);
             setCurrentCount(timeLeftString);
-            leftInInterval = timeLeft;
         } 
     }
 
