@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './App.module.scss';
 import { AlarmTime } from './components/alarm-time/alarm-time';
 import { NewInterval } from './components/new-interval/new-interval';
-
+import { timeToString } from './timeCalcs';
 
 function App() {
     const [alarmIntervals, setAlarmIntervals] = useState<React.ReactElement[]>([]);
@@ -10,6 +10,7 @@ function App() {
     const [counting, setCountingState] = useState(false);
     const [pauseText, setPauseText] = useState("Start");
     const [currentCount, setCurrentCount] = useState("0:00");
+    const [timeStarted, setTimeStarted] = useState(0);
 
     const removeAlarm = (id: number) => {
         setAlarmIntervals((old) =>
@@ -28,8 +29,10 @@ function App() {
     const handlePause = () => {
         if (counting) {
             setPauseText("Resume");
+            setTimeStarted(Date.now());
         } else {
             setPauseText("Pause");
+            setTimeStarted(0);
         }
         setCountingState(!counting);
     }
@@ -38,6 +41,27 @@ function App() {
         // This will reset the countdown to the initial state for the current interval
         console.log("Reset");
     }
+
+    useEffect(() => {
+        if (alarmIntervals.length === 0) {
+            setCurrentCount("0:00");
+        } else {
+            setCurrentCount(timeToString(alarmIntervals[0].props.duration));
+        }
+    }, [alarmIntervals]);
+
+    let aa = 500;
+    const timeUpdate = (isCounting: boolean) => {
+        if (isCounting) {
+            aa--;
+            console.log(aa, isCounting);
+        } 
+    }
+
+    useEffect(() => {
+        const interval = setInterval(() => timeUpdate(counting), 500);
+        return () => {clearInterval(interval);};
+    }, [counting]);
 
     return (
         <div className={styles.App}>

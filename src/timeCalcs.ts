@@ -8,6 +8,12 @@ export const msToHMS = (ms: number) => {
     return [hours, minutes, remainingSeconds];
 }
 
+export const HMStoMS = (HMS: Array<number>) => {
+    let ms = HMS[0] * 60 * 60 * 1000;
+    ms += HMS[1] * 60 * 1000;
+    ms += HMS[2] * 1000;
+    return ms;
+}
 
 export const timeToString = (time: Array<number>) => {
     let timeString = "";
