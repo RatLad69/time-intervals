@@ -1,14 +1,15 @@
 export const msToHMS = (ms: number) => {
-    // Converts a number in ms to [h:m:s] in numbers
+    // Converts a number in ms to [h,m,s,totalseconds] in numbers
     let remainingSeconds = ms / 1000;
     const hours = Math.floor(remainingSeconds / 60 / 60);
     remainingSeconds -= hours * 60 * 60;
     const minutes = Math.floor(remainingSeconds / 60);
     remainingSeconds -= minutes * 60;
-    return [hours, minutes, remainingSeconds];
+    return [hours, minutes, remainingSeconds, hours * 60 * 60 + minutes * 60 + remainingSeconds].map((x) => Math.floor(x));
 }
 
 export const HMStoMS = (HMS: Array<number>) => {
+    // Takes [h,m,s,(total seconds optional)] and returns total time in ms
     let ms = HMS[0] * 60 * 60 * 1000;
     ms += HMS[1] * 60 * 1000;
     ms += HMS[2] * 1000;
@@ -16,6 +17,7 @@ export const HMStoMS = (HMS: Array<number>) => {
 }
 
 export const inToHMS = (uInput: string) => {
+    // Takes input h:m:s and returns [h,m,s,total in seconds]
     const hmsList = uInput.split(":");
     let [hours, minutes, seconds] = [0, 0, 0];
     if (hmsList.length === 1) {
@@ -41,6 +43,7 @@ export const inToHMS = (uInput: string) => {
 }
 
 export const timeToString = (time: Array<number>) => {
+    // Takes [h,m,s,total] and returns string "hh:mm:ss"
     let timeString = "";
     for (let i = 0; i < time.length - 1; i++) {
         if (String(time[i]).length === 1) {

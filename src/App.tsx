@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import styles from './App.module.scss';
 import { AlarmTime } from './components/alarm-time/alarm-time';
 import { NewInterval } from './components/new-interval/new-interval';
-import { timeToString } from './timeCalcs';
+import { inToHMS, msToHMS, timeToString } from './timeCalcs';
+
+let timeStarted = 0;
+let intervalEnd = 0;
 
 function App() {
     const [alarmIntervals, setAlarmIntervals] = useState<React.ReactElement[]>([]);
@@ -10,7 +13,8 @@ function App() {
     const [counting, setCountingState] = useState(false);
     const [pauseText, setPauseText] = useState("Start");
     const [currentCount, setCurrentCount] = useState("0:00");
-    const [timeStarted, setTimeStarted] = useState(0);
+    //const [timeStarted, setTimeStarted] = useState(0);
+    //const [intervalEnd, setIntervalEnd] = useState(0);
 
     const removeAlarm = (id: number) => {
         setAlarmIntervals((old) =>
@@ -29,16 +33,18 @@ function App() {
     const handlePause = () => {
         if (counting) {
             setPauseText("Resume");
-            setTimeStarted(Date.now());
+            timeStarted = 0;
         } else {
             setPauseText("Pause");
-            setTimeStarted(0);
+            timeStarted = Date.now();
+            intervalEnd = timeStarted + 300 * 1000; //TODO: Change to duration of first alarm
+            console.log(intervalEnd - timeStarted);
         }
         setCountingState(!counting);
     }
 
     const handleReset = () => {
-        // This will reset the countdown to the initial state for the current interval
+        // TODO: This will reset the countdown to the initial state for the current interval
         console.log("Reset");
     }
 
@@ -50,11 +56,13 @@ function App() {
         }
     }, [alarmIntervals]);
 
-    let aa = 500;
     const timeUpdate = (isCounting: boolean) => {
         if (isCounting) {
-            aa--;
-            console.log(aa, isCounting);
+            // Start and end time should already be set by handlePause
+            const timeLeft = intervalEnd - Date.now();
+            const timeLeftHMS = msToHMS(timeLeft);
+            const timeLeftString = timeToString(timeLeftHMS);
+            setCurrentCount(timeLeftString);
         } 
     }
 
