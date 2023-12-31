@@ -6,6 +6,7 @@ import { inToHMS, msToHMS, timeToString } from './timeCalcs';
 
 let timeStarted = 0;
 let intervalEnd = 0;
+let leftInInterval = 0;
 
 function App() {
     const [alarmIntervals, setAlarmIntervals] = useState<React.ReactElement[]>([]);
@@ -31,16 +32,18 @@ function App() {
     }
 
     const handlePause = () => {
-        if (counting) {
-            setPauseText("Resume");
-            timeStarted = 0;
-        } else {
-            setPauseText("Pause");
-            timeStarted = Date.now();
-            intervalEnd = timeStarted + 300 * 1000; //TODO: Change to duration of first alarm
-            console.log(intervalEnd - timeStarted);
+        if (alarmIntervals.length > 0) {
+            if (counting) {
+                setPauseText("Resume");
+                timeStarted = 0;
+            } else {
+                setPauseText("Pause");
+                timeStarted = Date.now();
+                intervalEnd = timeStarted + inToHMS(currentCount)[3] * 1000; //TODO: Change to duration of first alarm
+                console.log(intervalEnd - timeStarted);
+            }
+            setCountingState(!counting);
         }
-        setCountingState(!counting);
     }
 
     const handleReset = () => {
@@ -51,7 +54,7 @@ function App() {
     useEffect(() => {
         if (alarmIntervals.length === 0) {
             setCurrentCount("0:00");
-        } else {
+        } else if (alarmIntervals.length === 1) {
             setCurrentCount(timeToString(alarmIntervals[0].props.duration));
         }
     }, [alarmIntervals]);
@@ -63,6 +66,7 @@ function App() {
             const timeLeftHMS = msToHMS(timeLeft);
             const timeLeftString = timeToString(timeLeftHMS);
             setCurrentCount(timeLeftString);
+            leftInInterval = timeLeft;
         } 
     }
 
