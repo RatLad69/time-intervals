@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styles from './App.module.scss';
 import { AlarmTime } from './components/alarm-time/alarm-time';
 import { NewInterval } from './components/new-interval/new-interval';
@@ -17,6 +17,7 @@ function App() {
     const [changedByUser, setChangedByUser] = useState(false);
     //const [timeStarted, setTimeStarted] = useState(0);
     //const [intervalEnd, setIntervalEnd] = useState(0);
+    const alarmSound = useMemo( () => new Audio("/bell1.mp3"), [] );
 
     const removeAlarm = (id: number, userClick: boolean) => {
         setAlarmIntervals((old) =>
@@ -85,8 +86,13 @@ function App() {
 
     useEffect(() => {
         if (inToHMS(currentCount)[3] < 1 && counting) {
-            // Detects if the current count has reached 0. If it has, deletes that alarm.
+            // Detects if the current count has reached 0. If it has, deletes that alarm and rings.
             removeAlarm(alarmIntervals[0].props.alarmID, false);
+            if (alarmSound.currentTime > 0) {
+                alarmSound.currentTime = 0;
+            } else {
+                alarmSound.play();
+            }
         }
     }, [currentCount])
 
