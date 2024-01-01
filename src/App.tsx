@@ -65,6 +65,7 @@ function App() {
             console.log("Changed by user");
             if (alarmIntervals.length === 0) {
                 setCurrentCount("0:00");
+                setCountingState(false);
             } else {
                 setCurrentCount(timeToString(alarmIntervals[0].props.duration));
             }
