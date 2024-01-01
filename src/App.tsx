@@ -6,9 +6,10 @@ import { inToHMS, msToHMS, timeToString } from './timeCalcs';
 
 let timeStarted = 0;
 let intervalEnd = 0;
-//let leftInInterval = 0;
 
 function App() {
+    // useEffect dependencies: alarmIntervals, changedByUser, currentCount, counting
+
     const [alarmIntervals, setAlarmIntervals] = useState<React.ReactElement[]>([]);
     const [alarmsAdded, setAlarmsAdded] = useState(0);
     const [counting, setCountingState] = useState(false);
@@ -53,7 +54,9 @@ function App() {
     }
 
     const handleReset = () => {
-        // TODO: This will reset the countdown to the initial state for the current interval
+        setCurrentCount(timeToString(alarmIntervals[0].props.duration));
+        timeStarted = Date.now();
+        intervalEnd = timeStarted + alarmIntervals[0].props.duration[3] * 1000;
         console.log("Reset");
     }
 
